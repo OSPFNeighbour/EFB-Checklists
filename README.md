@@ -15,7 +15,7 @@ Designed for and tested with OzRunway. When connected with Dropbox you can keep 
 - ✅ Persistent checklist state saved in `localStorage` (per file)
 - ✅ Reset button to clear progress and scroll to top
 - ✅ "Contents" section at the top with links to each group
-- ✅ Designed for full-screen use on iPad (Add to Home Screen)
+- ✅ Designed for full-screen use on iPad (Add to Home Screen or via documents in EFB)
 
 ## File Structure
 
