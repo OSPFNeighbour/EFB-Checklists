@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <h1 id="page-title">Loading...</h1>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    h1 {
+      font-size: 2em;
+      text-align: center;
+    }
+
+    .item {
+      position: relative;
+      padding: 20px;
+      margin: 10px 0;
+      background: white;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .item.done {
+      background: #c8f7c5;
+      border-color: #4CAF50;
+    }
+
+    .item-title {
+      font-size: 1.6em;
+      font-weight: bold;
+    }
+
+    .item-desc {
+      font-size: 1em;
+      color: #555;
+      margin-top: 5px;
+    }
+
+    .item-tick {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      font-size: 2em;
+      color: #4CAF50;
+      display: none;
+    }
+
+    .item.done .item-tick {
+      display: block;
+    }
+
+    .reset-button {
+      margin-top: 30px;
+      padding: 20px;
+      width: 100%;
+      font-size: 1.5em;
+      background-color: #ff5252;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .reset-button:active {
+      background-color: #e53935;
+    }
+
+    #checklist-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    #checklist-links a {
+      text-decoration: none;
+      padding: 10px 20px;
+      background-color: #674ea7;
+      color: white;
+      border-radius: 6px;
+      font-size: 1.2em;
+    }
+
+    #checklist-links a:active {
+      background-color: #1976d2;
+    }
+
+    .group-header {
+      font-size: 1.3em;
+      font-weight: bold;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      padding-left: 5px;
+      color: #333;
+      border-left: 4px solid #2196f3;
+    }
+
+    .toc {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;   /* Center horizontally */
+
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 10px;
+      background: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .toc-link {
+      font-size: 1em;
+      text-decoration: none;
+      padding: 8px 12px;
+      background: #2196f3;
+      color: white;
+      border-radius: 5px;
+    }
+
+    .toc-link:active {
+      background: #1976d2;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="checklist-links">
+    <a href="01 - Preflight.html">01 Preflight Checklist</a><br>
+    <a href="02 - Start & After Start.html">02 Start & After Checklist</a><br>
+    <a href="03 - Runup & Pre Take Off.html">03 Runup & Holding Checklist</a><br>
+  </div>
+  <div id="toc" class="toc"></div>
+
+  <div id="checklist"></div>
+
+  <button class="reset-button" onclick="resetChecklist()">Reset</button>
+
+  <script>
+    const checklistData = [
+      {
+        group: "Pre-Start Checks",
+        items: [
+          { title: "Pre-flight Inspection", desc: "Completed" },
+          { title: "Documentation", desc: "M.R. and AFM/POH" },
+          { title: "Seat (front)", desc: "Adjusted and secure" },
+          { title: "Seat Belts/Shoulder Harness", desc: "Fastened (front and rear)" },
+          { title: "Cabin Door", desc: "Closed and secure" },
+          { title: "Parking Brake", desc: "Set" },
+          { title: "Radio/Transponder", desc: "OFF" },
+          { title: "Controls", desc: "Free and correct sense" },
+          { title: "Trim (elevator)", desc: "Full travel/set for take-off" },
+          { title: "Mixture", desc: "FULL RICH" },
+          { title: "Carburettor Heat", desc: "COLD" },
+          { title: "Master Switch", desc: "ON" },
+          { title: "Magneto Switches", desc: "ON (left & right)" },
+          { title: "Circuit Breakers/Fuses", desc: "Checked" }
+        ]
+      },
+      {
+        group: "Cold Start",
+        items: [
+          { title: "Prime", desc: "As required (*) – check locked" },
+          { title: "Throttle", desc: "Cracked open (1/2 to 1 cm)" },
+          { title: "Propeller", desc: "LOOKOUT – “Clear Prop”" },
+          { title: "Starter Button", desc: "Push (release when engine starts)" }
+        ]
+      },
+      {
+        group: "Hot Start",
+        items: [
+          { title: "Primer", desc: "LOCKED" },
+          { title: "Throttle", desc: "Cracked open (1/2 to 1 cm)" },
+          { title: "Propeller", desc: "LOOKOUT – “Clear Prop”" },
+          { title: "Starter Button", desc: "Push (release when engine starts)" }
+        ]
+      },
+      {
+        group: "Flooded Start",
+        items: [
+          { title: "Magneto Switches", desc: "OFF" },
+          { title: "Mixture", desc: "IDLE CUT-OFF" },
+          { title: "Throttle", desc: "FULLY OPEN" },
+          { title: "Propeller", desc: "LOOKOUT – “Clear Prop”" },
+          { title: "Starter Button", desc: "Engage (for several revolutions)" },
+          { title: "Note", desc: "REPEAT NORMAL STARTING PROCEDURES – NO PRIME" }
+        ]
+      },
+      {
+        group: "After Start",
+        items: [
+          { title: "Throttle", desc: "800 RPM – Cold start, 1000 RPM – Hot start" },
+          { title: "Oil Pressure", desc: "Yellow arc (within 30 seconds)" },
+          { title: "Ammeter", desc: "Checked" },
+          { title: "Turn Co-ordinator", desc: "Flag away" },
+          { title: "Radio/Transponder", desc: "ON – set as required" },
+          { title: "Strobes (Anti-collision)", desc: "ON" },
+          { title: "Parking Brake", desc: "Release when ready to taxi" }
+        ]
+      }
+    ];
+
+  </script>
+
+  <script>
+
+    const filePath = window.location.pathname;
+    const fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
+    const baseName = fileName.replace('.html', '').replace(/[-_]/g, ' ');
+    const storageKey = `${fileName}_checklistState`;
+
+
+    document.getElementById('page-title').textContent = decodeURIComponent(baseName.charAt(0).toUpperCase() + baseName.slice(1));
+
+
+    const checklistEl = document.getElementById("checklist");
+    const tocEl = document.getElementById("toc");
+
+    const state = new Set(JSON.parse(localStorage.getItem(storageKey) || "[]"));
+
+    let globalIndex = 0;
+
+
+    checklistData.forEach(group => {
+
+      const link = document.createElement("a");
+      const id = group.group.toLowerCase().replace(/\s+/g, '-');
+      link.href = `#${id}`;
+      link.textContent = group.group;
+      link.className = "toc-link";
+      tocEl.appendChild(link);
+
+
+  const groupId = group.group.toLowerCase().replace(/\s+/g, '-'); // e.g. "Right Wing" -> "right-wing"
+  const groupHeader = document.createElement("div");
+  groupHeader.className = "group-header";
+  groupHeader.id = groupId;
+  groupHeader.textContent = group.group;
+  checklistEl.appendChild(groupHeader);
+
+  group.items.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "item";
+    if (state.has(globalIndex)) div.classList.add("done");
+
+    const title = document.createElement("div");
+    title.className = "item-title";
+    title.textContent = item.title;
+
+    const desc = document.createElement("div");
+    desc.className = "item-desc";
+    desc.textContent = item.desc;
+
+    const tick = document.createElement("div");
+    tick.className = "item-tick";
+    tick.innerHTML = "✔";
+
+    div.appendChild(title);
+    div.appendChild(desc);
+    div.appendChild(tick);
+
+    div.addEventListener("click", () => {
+      div.classList.toggle("done");
+      if (div.classList.contains("done")) {
+        state.add(globalIndex);
+      } else {
+        state.delete(globalIndex);
+      }
+      localStorage.setItem(storageKey, JSON.stringify([...state]));
+    });
+
+    checklistEl.appendChild(div);
+    globalIndex++;
+  });
+});
+
+    function resetChecklist() {
+      localStorage.removeItem(storageKey);
+      document.querySelectorAll(".item").forEach(el => el.classList.remove("done"));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
