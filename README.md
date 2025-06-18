@@ -4,6 +4,10 @@ This project provides a self-contained, offline-capable, touch-optimized checkli
 
 Designed for and tested with OzRunway. When connected with Dropbox you can keep the lists folder in sync, no internet is required once the list is downloaded within OzRunway.
 
+
+![Prestart](/screenshots/start.png?raw=true "Pre Start")
+
+
 ## Features
 
 - ✅ Touch-friendly UI with large checklist items and tick indicators
